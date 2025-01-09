@@ -1,0 +1,28 @@
+# This file exists so you can easily regenerate your project.
+# run:
+#
+#    cookiecutter --overwrite-if-exists --config-file=.cookiecutterrc gh:BAMresearch/yapy-cookiecutter
+
+default_context:
+    author_count:              '1'
+    full_names:                'Anja Hörmann'
+    emails:                    'anja.hoermann@bam.de'
+    websites:                  'https://github.com/ahoermann'
+    project_name:              'MOUSE alignment routines'
+    repo_name:                 'mouse-alignment-routines'
+    repo_hosting:              'github.com'
+    repo_hosting_domain:       'github.com'
+    repo_userorg:              'BAMresearch'
+    docs_url:                  'https://BAMresearch.github.io/mouse-alignment-routines'
+    repo_main_branch:          'main'
+    package_name:              'mouse_alignment_routines'
+    distribution_name:         'mouse-alignment-routines'
+    project_short_description: 'Alignment prhe MOUSE X-ray scattering instrument at BAM to study thin films.'
+    release_date:              'today'
+    year_from:                 '2025'
+    year_to:                   '2025'
+    version:                   '0.1.0'
+    pypi_host:                 'test.pypi.org'
+    license:                   'GNU General Public License v3 or later (GPLv3+)'
+    sphinx_theme:              'python-docs-theme'
+    extra_context:             {'exclude_existing': "['AUTHORS.rst', 'CHANGELOG.md', 'src/mouse_alignment_routines/__init__.py']"}
