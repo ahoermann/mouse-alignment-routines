@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-import transmission_models as tm
+from . import transmission_models as tm
 from logbook2mouse.scan import scan
 from logbook2mouse.measure_config import (
     move_motor, move_to_sampleposition
