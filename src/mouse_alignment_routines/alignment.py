@@ -6,6 +6,7 @@ from logbook2mouse.scan import scan
 from logbook2mouse.measure_config import (
     move_motor, move_to_sampleposition
     )
+from pathlib import Path
 
 def center_pitch(experiment, limits, npoints, sampleposition, store_location):
     "scan of pitch angle with fit, ensuring that the motor is always scanned in the negative direction"
@@ -64,7 +65,7 @@ def pitch_limit(sigma_beam, halfsample):
     # \(\pm 2 \frac{\sigma_{\mathrm{beam}}}{\tfrac{1}{2} l_{\mathrm{sample}}}\)
     return np.rad2deg(2 * sigma_beam/halfsample)
 
-def pitch_align(experiment, start_z, start_pitch, sigma_beam, halfsample=15, sampleposition={"ysam.blank": -66}, store_location):
+def pitch_align(experiment, start_z, start_pitch, sigma_beam, halfsample=15, sampleposition={"ysam.blank": -66}, store_location=Path('.')):
     center, sigma = start_z, sigma_beam
     move_motor("zheavy", center)
     move_motor("pitchgi", start_pitch)
@@ -98,7 +99,7 @@ def pitch_align(experiment, start_z, start_pitch, sigma_beam, halfsample=15, sam
         
     
 def roll_align(experiment, y_center, sigma_beam, rolloffset, centerofrotation = 30,
-               sampleposition={"ysam.blank": -66}, store_location):
+               sampleposition={"ysam.blank": -66}, store_location=Path(".")):
     y_neg = y_center - rolloffset
     move_motor("ysam", y_neg)
     neg_center, sigma = zheavy_center(experiment, (-2*sigma_beam, +2*sigma_beam), 31,
