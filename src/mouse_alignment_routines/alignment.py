@@ -16,7 +16,7 @@ def center_pitch(experiment, limits, npoints, sampleposition, store_location):
     else:
         scan("pitchgi", limits[1], limits[0], npoints, 1,
              experiment, sampleposition, store_location)
-    data = pd.read_csv(store_location / "current_scan.csv", delimiter = ",",
+    data = pd.read_csv(Path("/home/ws8665-epics/scan-using-epics-ioc/current_scan.csv"), delimiter = ",",
                        )
     motorname = data.columns[0].split(":")[-1]
 
@@ -31,7 +31,7 @@ def center_pitch(experiment, limits, npoints, sampleposition, store_location):
 def zheavy_center(experiment, limits, npoints, sampleposition, store_location):
     scan("zheavy", limits[0], limits[1], npoints, 1,
          experiment, sampleposition, store_location)
-    data = pd.read_csv(store_location / "current_scan.csv", delimiter = ",",
+    data = pd.read_csv(Path("/home/ws8665-epics/scan-using-epics-ioc/current_scan.csv"), delimiter = ",",
                        )
     motorname = data.columns[0].split(":")[-1]
     xvals = data[data.columns[0]].values
@@ -48,7 +48,7 @@ def zheavy_center(experiment, limits, npoints, sampleposition, store_location):
 def horizontal_center(experiment, limits, npoints, sampleposition, store_location):
     scan("ysam", limits[0], limits[1], npoints, 1,
                       experiment, sampleposition, store_location)
-    data = pd.read_csv(store_location / "current_scan.csv", delimiter = ",",
+    data = pd.read_csv(Path("/home/ws8665-epics/scan-using-epics-ioc/current_scan.csv"), delimiter = ",",
                        )
     motorname = data.columns[0].split(":")[-1]
 
