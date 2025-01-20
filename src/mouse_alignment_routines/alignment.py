@@ -75,12 +75,16 @@ def pitch_align(experiment, start_z, start_pitch, sigma_beam, halfsample=15, sam
     pitch_center = start_pitch
     new_center, new_sigma = zheavy_center(experiment, (-2*sigma_beam, +2*sigma_beam), 31,
                                           sampleposition, store_location)
-    move_motor("zheavy", new_center) 
+    move_motor("zheavy", new_center)
+    sampleposition["zheavy"] = new_center
     pitch_delta = pitch_limit(new_sigma, halfsample)
     new_pitch_center, new_beam_offset = center_pitch(experiment, (-pitch_delta, +pitch_delta), 31,
                                                      sampleposition, store_location)
+    sampleposition["pitchgi"] = new_pitch_center
     logging.info(f"Moving motor pitchgi to {new_pitch_center}")
     move_motor("pitchgi", new_pitch_center)
+
+    sampleposition["zheavy"] = new_center+new_beam_offset
     logging.info(f"Moving motor pitchgi to {new_center} + {new_beam_offset}")
     move_motor("zheavy", new_center+new_beam_offset)
     # with stopping condition but not adaptive number of points 
@@ -90,12 +94,15 @@ def pitch_align(experiment, start_z, start_pitch, sigma_beam, halfsample=15, sam
         beam_offset = new_beam_offset
         new_center, new_sigma = zheavy_center(experiment, (-2*sigma_beam, +2*sigma_beam), 31,
                                               sampleposition, store_location)
-        move_motor("zheavy", new_center) 
+        move_motor("zheavy", new_center)
+        sampleposition["zheavy"] = new_center
         pitch_delta = pitch_limit(new_sigma, halfsample)
         new_pitch_center, new_beam_offset = center_pitch(experiment, (-pitch_delta, +pitch_delta), 31,
                                                          sampleposition, store_location)
         move_motor("pitchgi", new_pitch_center)
+        sampleposition["pitchgi"] = new_pitch_center
         move_motor("zheavy", new_center+new_beam_offset)
+        sampleposition["zheavy"] = new_center+new_beam_offset
         logging.info(f"preliminary horizontal position pitch: {new_pitch_center}°")
         logging.info(f"preliminary sample surface, vertical position: {new_center} mm")
     return new_pitch_center, new_center 
