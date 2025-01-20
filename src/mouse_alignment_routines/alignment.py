@@ -7,6 +7,7 @@ from logbook2mouse.measure_config import (
     move_motor, move_to_sampleposition
     )
 from pathlib import Path
+import logging
 
 def center_pitch(experiment, limits, npoints, sampleposition, store_location):
     "scan of pitch angle with fit, ensuring that the motor is always scanned in the negative direction"
