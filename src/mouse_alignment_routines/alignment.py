@@ -79,7 +79,9 @@ def pitch_align(experiment, start_z, start_pitch, sigma_beam, halfsample=15, sam
     pitch_delta = pitch_limit(new_sigma, halfsample)
     new_pitch_center, new_beam_offset = center_pitch(experiment, (-pitch_delta, +pitch_delta), 31,
                                                      sampleposition, store_location)
+    logging.info(f"Moving motor pitchgi to {new_pitch_center}")
     move_motor("pitchgi", new_pitch_center)
+    logging.info(f"Moving motor pitchgi to {new_center} + {new_beam_offset}")
     move_motor("zheavy", new_center+new_beam_offset)
     # with stopping condition but not adaptive number of points 
     while abs(new_center - center) > 0.01 or abs(new_pitch_center - pitch_center) > 0.002:
