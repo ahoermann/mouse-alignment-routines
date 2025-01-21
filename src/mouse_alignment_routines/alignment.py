@@ -84,9 +84,9 @@ def pitch_align(experiment, start_z, start_pitch, sigma_beam, halfsample=15, sam
     logging.info(f"Moving motor pitchgi to {new_pitch_center}")
     move_motor("pitchgi", new_pitch_center)
 
-    sampleposition["zheavy"] = new_center-new_beam_offset
-    logging.info(f"Moving motor pitchgi to {new_center} - {new_beam_offset}")
-    move_motor("zheavy", new_center-new_beam_offset)
+    sampleposition["zheavy"] = new_center+new_beam_offset
+    logging.info(f"Moving motor pitchgi to {new_center} + {new_beam_offset}")
+    move_motor("zheavy", new_center+new_beam_offset)
     # with stopping condition but not adaptive number of points 
     while abs(new_center - center) > 0.01 or abs(new_pitch_center - pitch_center) > 0.005:
         center = new_center
@@ -101,8 +101,8 @@ def pitch_align(experiment, start_z, start_pitch, sigma_beam, halfsample=15, sam
                                                          sampleposition, store_location)
         move_motor("pitchgi", new_pitch_center)
         sampleposition["pitchgi"] = new_pitch_center
-        move_motor("zheavy", new_center-new_beam_offset)
-        sampleposition["zheavy"] = new_center-new_beam_offset
+        move_motor("zheavy", new_center+new_beam_offset)
+        sampleposition["zheavy"] = new_center+new_beam_offset
         logging.info(f"preliminary horizontal position pitch: {new_pitch_center}°")
         logging.info(f"preliminary sample surface, vertical position: {new_center} mm")
     return new_pitch_center, new_center 
