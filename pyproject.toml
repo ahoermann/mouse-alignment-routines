@@ -30,8 +30,8 @@ dependencies = [
 "numpy",
 "pandas",
 "caproto",
-"lmfit @ git+https://github.com/lmfit/lmfit-py.git",
-"logbook2mouse @ file:../../logbook2mouse",  # workaround to use branch grazing_incidence_protocols locally,
+"lmfit",
+#"logbook2mouse @ file:../../logbook2mouse",  # workaround to use branch grazing_incidence_protocols locally,
 # installation from github uses main
 #"logbook2mouse @ git+https://github.com/BAMresearch/logbook2mouse.git#4b55e935c7c69361359fd2c7b1129b4beb77247c",
 ]
