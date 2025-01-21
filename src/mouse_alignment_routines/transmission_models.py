@@ -23,7 +23,7 @@ class PitchModel:
                                                   length=dict(value = self.samplelength, vary = False),
                                                   ampl=dict(value = 1.0, vary = False),
                                                   beam_center=dict(value = 0.0, min = -0.5, max = 0.5),
-                                                  beam_sigma=dict(value = 0.1, min = 0.01, max = 0.5)
+                                                  beam_sigma=dict(value = 0.1, min = 0.01, max = 0.5, vary = False)
                                                   )
     
 
