@@ -28,8 +28,9 @@ def center_pitch(experiment, limits, npoints, sampleposition, pitchmodel, store_
                          )
     center = res.best_values["x0"]
     beam_offset = res.best_values["beam_center"]
-    tm.pitch_params["x0"].set(value = center, min = -1,  max = 1)
-    return center, beam_offset
+    pitchmodel.parameters["x0"].set(value = center, min = -1,  max = 1)
+    pitchmodel.parameters["beam_center"].set(value = center)
+    return center, beam_offset, pitchmodel
 
 def zheavy_center(experiment, limits, npoints, sampleposition, store_location):
     scan("zheavy", limits[0], limits[1], npoints, 1,
@@ -85,9 +86,9 @@ def pitch_align(experiment, start_z, start_pitch, sigma_beam, halfsample=15, sam
     move_motor("zheavy", new_center)
     sampleposition["zheavy"] = new_center
     pitch_delta = pitch_limit(new_sigma, halfsample)
-    new_pitch_center, new_beam_offset = center_pitch(experiment, (-pitch_delta, +pitch_delta), 31,
-                                                     sampleposition, pitchmodel,
-                                                     store_location)
+    new_pitch_center, new_beam_offset, pitchmodel = center_pitch(experiment, (-pitch_delta, +pitch_delta), 31,
+                                                                 sampleposition, pitchmodel,
+                                                                 store_location)
     sampleposition["pitchgi"] = new_pitch_center
     logging.info(f"Moving motor pitchgi to {new_pitch_center}")
     move_motor("pitchgi", new_pitch_center)
@@ -105,8 +106,8 @@ def pitch_align(experiment, start_z, start_pitch, sigma_beam, halfsample=15, sam
         move_motor("zheavy", new_center)
         sampleposition["zheavy"] = new_center
         pitch_delta = pitch_limit(new_sigma, halfsample)
-        new_pitch_center, new_beam_offset = center_pitch(experiment, (-pitch_delta, +pitch_delta), 31,
-                                                         sampleposition, pitchmodel, store_location)
+        new_pitch_center, new_beam_offset, pitchmodel = center_pitch(experiment, (-pitch_delta, +pitch_delta), 31,
+                                                                     sampleposition, pitchmodel, store_location)
         move_motor("pitchgi", new_pitch_center)
         sampleposition["pitchgi"] = new_pitch_center
         move_motor("zheavy", new_center+new_beam_offset)
