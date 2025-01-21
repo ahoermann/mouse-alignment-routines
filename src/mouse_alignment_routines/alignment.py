@@ -121,17 +121,17 @@ def pitch_align(experiment, start_z, start_pitch, sigma_beam, halfsample=15, sam
         
     
 def roll_align(experiment, y_center, sigma_beam, rolloffset, centerofrotation = 30,
-               sampleposition={"ysam.blank": -66}, store_location=Path(".")):
+               sampleposition={"ysam.blank": -66}, zheavymodel, store_location=Path(".")):
     y_neg = y_center - rolloffset
     sampleposition["ysam"] = y_neg
     move_motor("ysam", y_neg)
     neg_center, sigma = zheavy_center(experiment, (-2*sigma_beam, +2*sigma_beam), 31,
-                                      sampleposition, store_location)
+                                      sampleposition, zheavymodel, store_location)
     y_pos = y_center + rolloffset
     move_motor("ysam", y_pos)
     sampleposition["ysam"] = y_pos
     pos_center, sigma = zheavy_center(experiment, (-2*sigma_beam, +2*sigma_beam), 31,
-                                      sampleposition, store_location)
+                                      sampleposition, zheavymodel, store_location)
     print("positive edge:", pos_center)
     print("negative edge:", neg_center)
     rollangle = np.rad2deg(np.arctan((pos_center - neg_center)/(2 * rolloffset)))
