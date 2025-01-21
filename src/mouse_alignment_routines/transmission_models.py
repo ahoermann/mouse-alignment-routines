@@ -1,6 +1,7 @@
 import numpy as np
 from scipy.special import erf
-import lmfit as lm 
+import lmfit as lm
+from attrs import define, field
 
 def pitchgi_model(x, x0, length, ampl, beam_center, beam_sigma):
     return ampl * (1 -
@@ -10,6 +11,21 @@ def pitchgi_model(x, x0, length, ampl, beam_center, beam_sigma):
                         )
                    )
 
+
+@define
+class PitchModel:
+    model = field(default = lm.Model(pitchgi_model))
+    samplelength = field(default = 15)
+    parameters = field(init = False)
+
+    def __attrs_post_init__(self):
+        self.parameters = pitch_model.make_params(x0=dict(value = 0, min = -1, max = 1),
+                                                  length=dict(value = self.samplelength, vary = False),
+                                                  ampl=dict(value = 1.0, vary = False),
+                                                  beam_center=dict(value = 0.0, min = -0.5, max = 0.5),
+                                                  beam_sigma=dict(value = 0.1, min = 0.01, max = 0.5)
+                                                  )
+    
 
 pitch_model = lm.Model(pitchgi_model)
 pitch_params = pitch_model.make_params()

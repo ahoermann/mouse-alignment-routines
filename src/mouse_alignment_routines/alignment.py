@@ -10,7 +10,7 @@ from pathlib import Path
 import logging
 logging.basicConfig(level=logging.INFO)
 
-def center_pitch(experiment, limits, npoints, sampleposition, store_location):
+def center_pitch(experiment, limits, npoints, sampleposition, pitchmodel, store_location):
     "scan of pitch angle with fit, ensuring that the motor is always scanned in the negative direction"
     if limits[0] < limits[1]:
         scan("pitchgi", limits[0], limits[1], npoints, 1,
@@ -22,10 +22,10 @@ def center_pitch(experiment, limits, npoints, sampleposition, store_location):
                        )
     motorname = data.columns[0].split(":")[-1]
 
-    res = tm.pitch_model.fit(data[data.columns[1]].values, tm.pitch_params, 
-                             x = data[data.columns[0]].values,
-                              method='basinhopping'
-                             )
+    res = pitchmodel.fit(data[data.columns[1]].values, pitchmodel.parameters, 
+                         x = data[data.columns[0]].values,
+                         method='basinhopping'
+                         )
     center = res.best_values["x0"]
     beam_offset = res.best_values["beam_center"]
     tm.pitch_params["x0"].set(value = center, min = -1,  max = 1)
@@ -74,6 +74,9 @@ def pitch_align(experiment, start_z, start_pitch, sigma_beam, halfsample=15, sam
     center, sigma = start_z, sigma_beam
     move_motor("zheavy", center)
     move_motor("pitchgi", start_pitch)
+
+    pitchmodel = tm.PitchModel()
+    
     #center, sigma = zheavy_center(scanmanager,
     # not sure how the logic of this works
     pitch_center = start_pitch
@@ -83,7 +86,8 @@ def pitch_align(experiment, start_z, start_pitch, sigma_beam, halfsample=15, sam
     sampleposition["zheavy"] = new_center
     pitch_delta = pitch_limit(new_sigma, halfsample)
     new_pitch_center, new_beam_offset = center_pitch(experiment, (-pitch_delta, +pitch_delta), 31,
-                                                     sampleposition, store_location)
+                                                     sampleposition, pitchmodel,
+                                                     store_location)
     sampleposition["pitchgi"] = new_pitch_center
     logging.info(f"Moving motor pitchgi to {new_pitch_center}")
     move_motor("pitchgi", new_pitch_center)
