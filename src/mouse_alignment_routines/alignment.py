@@ -23,8 +23,9 @@ def center_pitch(experiment, limits, npoints, sampleposition, store_location):
     motorname = data.columns[0].split(":")[-1]
 
     res = tm.pitch_model.fit(data[data.columns[1]].values, tm.pitch_params, 
-                          x = data[data.columns[0]].values, 
-                          )
+                             x = data[data.columns[0]].values,
+                              method='basinhopping'
+                             )
     center = res.best_values["x0"]
     beam_offset = res.best_values["beam_center"]
     tm.pitch_params["x0"].set(value = center, min = -1,  max = 1)
@@ -38,7 +39,8 @@ def zheavy_center(experiment, limits, npoints, sampleposition, store_location):
     motorname = data.columns[0].split(":")[-1]
     xvals = data[data.columns[0]].values
     res = tm.z_model.fit(data[data.columns[1]].values, tm.z_params, 
-                          x = xvals, 
+                          x = xvals,
+                          method='basinhopping'
                           )
     center = res.best_values["center"]
     tm.z_params["center"].set(value = center, min = 2, max = 6)
@@ -55,7 +57,8 @@ def horizontal_center(experiment, limits, npoints, sampleposition, store_locatio
     motorname = data.columns[0].split(":")[-1]
 
     res = tm.gap_model.fit(data[data.columns[1]].values, tm.gap_params, 
-                          x = data[data.columns[0]].values, 
+                          x = data[data.columns[0]].values,
+                           method='basinhopping'
                           )
     center = 0.5*(res.best_values["center1"]+res.best_values["center2"])
     y = data[data.columns[1]].values
