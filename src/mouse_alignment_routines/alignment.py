@@ -22,7 +22,7 @@ def center_pitch(experiment, limits, npoints, sampleposition, pitchmodel, store_
                        )
     motorname = data.columns[0].split(":")[-1]
 
-    res = pitchmodel.fit(data[data.columns[1]].values, pitchmodel.parameters, 
+    res = pitchmodel.model.fit(data[data.columns[1]].values, pitchmodel.parameters, 
                          x = data[data.columns[0]].values,
                          method='basinhopping'
                          )
