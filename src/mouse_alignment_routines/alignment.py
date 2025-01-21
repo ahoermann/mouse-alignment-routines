@@ -121,7 +121,7 @@ def pitch_align(experiment, start_z, start_pitch, sigma_beam, halfsample=15, sam
         
     
 def roll_align(experiment, y_center, sigma_beam, rolloffset, centerofrotation = 30,
-               sampleposition={"ysam.blank": -66}, zheavymodel, store_location=Path(".")):
+               sampleposition={"ysam.blank": -66}, zheavymodel=tm.ZheavyModel(), store_location=Path(".")):
     y_neg = y_center - rolloffset
     sampleposition["ysam"] = y_neg
     move_motor("ysam", y_neg)
