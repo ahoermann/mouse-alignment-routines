@@ -75,7 +75,7 @@ def pitch_align(experiment, start_z, start_pitch, sigma_beam, halfsample=15, sam
     move_motor("zheavy", center)
     move_motor("pitchgi", start_pitch)
 
-    pitchmodel = tm.PitchModel()
+    pitchmodel = tm.PitchModel(samplelength=halfsample)
     
     #center, sigma = zheavy_center(scanmanager,
     # not sure how the logic of this works
