@@ -86,9 +86,11 @@ def pitch_align(experiment, start_z, start_pitch, sigma_beam, halfsample=15, sam
     move_motor("zheavy", new_center)
     sampleposition["zheavy"] = new_center
     pitch_delta = pitch_limit(new_sigma, halfsample)
+    pitchmodel.parameters["beam_sigma"].set(value = new_sigma)
     new_pitch_center, new_beam_offset, pitchmodel = center_pitch(experiment, (-pitch_delta, +pitch_delta), 31,
                                                                  sampleposition, pitchmodel,
                                                                  store_location)
+    print('pitch fit', pitchmodel.model.best_values)
     sampleposition["pitchgi"] = new_pitch_center
     logging.info(f"Moving motor pitchgi to {new_pitch_center}")
     move_motor("pitchgi", new_pitch_center)
@@ -105,9 +107,11 @@ def pitch_align(experiment, start_z, start_pitch, sigma_beam, halfsample=15, sam
                                               sampleposition, store_location)
         move_motor("zheavy", new_center)
         sampleposition["zheavy"] = new_center
+        pitchmodel.parameters["beam_sigma"].set(value = new_sigma)
         pitch_delta = pitch_limit(new_sigma, halfsample)
         new_pitch_center, new_beam_offset, pitchmodel = center_pitch(experiment, (-pitch_delta, +pitch_delta), 31,
                                                                      sampleposition, pitchmodel, store_location)
+        print('pitch fit', pitchmodel.model.best_values)
         move_motor("pitchgi", new_pitch_center)
         sampleposition["pitchgi"] = new_pitch_center
         move_motor("zheavy", new_center+new_beam_offset)
