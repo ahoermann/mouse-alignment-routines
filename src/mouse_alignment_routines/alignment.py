@@ -30,6 +30,7 @@ def center_pitch(experiment, limits, npoints, sampleposition, pitchmodel, store_
     beam_offset = res.best_values["beam_center"]
     pitchmodel.parameters["x0"].set(value = center, min = -1,  max = 1)
     pitchmodel.parameters["beam_center"].set(value = center)
+    print('pitch fit', res.best_values)
     return center, beam_offset, pitchmodel
 
 def zheavy_center(experiment, limits, npoints, sampleposition, store_location):
@@ -111,7 +112,7 @@ def pitch_align(experiment, start_z, start_pitch, sigma_beam, halfsample=15, sam
         pitch_delta = pitch_limit(new_sigma, halfsample)
         new_pitch_center, new_beam_offset, pitchmodel = center_pitch(experiment, (-pitch_delta, +pitch_delta), 31,
                                                                      sampleposition, pitchmodel, store_location)
-        print('pitch fit', pitchmodel.model.best_values)
+
         move_motor("pitchgi", new_pitch_center)
         sampleposition["pitchgi"] = new_pitch_center
         move_motor("zheavy", new_center+new_beam_offset)
