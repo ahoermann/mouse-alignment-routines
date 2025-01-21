@@ -36,6 +36,23 @@ pitch_params["beam_center"].set(value = 0, min = -2, max = 2)
 pitch_params["beam_sigma"].set(value = 0.1, min = 0.01, max = 2)
 
 
+@define
+class ZheavyModel:
+    model = field(default = lm.models.StepModel(form = "erf") + lm.models.LinearModel())
+    parameters = field(init = False)
+    sigma = field(default = 0.1)
+    center = field(default = 4.5)
+
+    def __attrs_post_init__(self):
+        self.parameters = pitch_model.make_params(center=dict(value = self.center, min = 0, max = 8),
+                                                  amplitude=dict(value = -1, min = -1, max = 0),
+                                                  intercept=dict(value = 1, min = 0, max = 1, expr = "-amplitude"),
+                                                  sigma=dict(value = self.sigma, min = 0.05, max = 1),
+                                                  slope=dict(value = 0, vary = False)
+                                                  )
+    
+
+
 z_model = lm.models.StepModel(form = "erf") + lm.models.LinearModel()
 z_params = z_model.make_params()
 z_params["center"].set(value = 4.5, min = 0, max = 10)

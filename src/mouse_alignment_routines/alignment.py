@@ -24,7 +24,6 @@ def center_pitch(experiment, limits, npoints, sampleposition, pitchmodel, store_
 
     res = pitchmodel.model.fit(data[data.columns[1]].values, pitchmodel.parameters, 
                          x = data[data.columns[0]].values,
-                         method='basinhopping'
                          )
     center = res.best_values["x0"]
     beam_offset = res.best_values["beam_center"]
@@ -33,23 +32,20 @@ def center_pitch(experiment, limits, npoints, sampleposition, pitchmodel, store_
     print('pitch fit', res.best_values)
     return center, beam_offset, pitchmodel
 
-def zheavy_center(experiment, limits, npoints, sampleposition, store_location):
+def zheavy_center(experiment, limits, npoints, sampleposition, zheavymodel, store_location):
     scan("zheavy", limits[0], limits[1], npoints, 1,
          experiment, sampleposition, store_location)
     data = pd.read_csv(Path("/home/ws8665-epics/scan-using-epics-ioc/current_scan.csv"), delimiter = ",",
                        )
     motorname = data.columns[0].split(":")[-1]
     xvals = data[data.columns[0]].values
-    res = tm.z_model.fit(data[data.columns[1]].values, tm.z_params, 
-                          x = xvals,
-                          method='basinhopping'
-                          )
+    res = zheavymodel.model.fit(data[data.columns[1]].values, tm.z_params, 
+                                x = xvals,
+                                )
     center = res.best_values["center"]
-    tm.z_params["center"].set(value = center, min = 2, max = 6)
+    zheavymodel.parameters["center"].set(value = center)
     sigma = res.best_values["sigma"]
-    tm.pitch_params["beam_sigma"].set(value = sigma, min = 0, max = 1, vary = False)
-    tm.z_params["sigma"].set(value = sigma, min = 0, max = 1)
-    return center, sigma 
+    return center, sigma, zheavymodel 
 
 def horizontal_center(experiment, limits, npoints, sampleposition, store_location):
     scan("ysam", limits[0], limits[1], npoints, 1,
@@ -78,16 +74,19 @@ def pitch_align(experiment, start_z, start_pitch, sigma_beam, halfsample=15, sam
     move_motor("pitchgi", start_pitch)
 
     pitchmodel = tm.PitchModel(samplelength=halfsample)
+    zheavymodel = tm.ZheavyModel(sigma = sigma_beam, center = start_z)
     
     #center, sigma = zheavy_center(scanmanager,
     # not sure how the logic of this works
     pitch_center = start_pitch
-    new_center, new_sigma = zheavy_center(experiment, (-2*sigma_beam, +2*sigma_beam), 31,
-                                          sampleposition, store_location)
+    new_center, new_sigma, zheavymodel = zheavy_center(experiment, (-2*sigma_beam, +2*sigma_beam), 31,
+                                          sampleposition, zheavymodel, store_location)
+    zheavymodel.parameters["sigma"].set(value = new_sigma, vary = False)
+
     move_motor("zheavy", new_center)
     sampleposition["zheavy"] = new_center
     pitch_delta = pitch_limit(new_sigma, halfsample)
-    pitchmodel.parameters["beam_sigma"].set(value = new_sigma)
+    pitchmodel.parameters["beam_sigma"].set(value = new_sigma, vary = False)
     new_pitch_center, new_beam_offset, pitchmodel = center_pitch(experiment, (-pitch_delta, +pitch_delta), 31,
                                                                  sampleposition, pitchmodel,
                                                                  store_location)
@@ -103,11 +102,11 @@ def pitch_align(experiment, start_z, start_pitch, sigma_beam, halfsample=15, sam
         center = new_center
         pitch_center = new_pitch_center
         beam_offset = new_beam_offset
-        new_center, new_sigma = zheavy_center(experiment, (-2*sigma_beam, +2*sigma_beam), 31,
-                                              sampleposition, store_location)
+        new_center, new_sigma, zheavymodel = zheavy_center(experiment, (-2*sigma_beam, +2*sigma_beam), 31,
+                                              sampleposition,  zheavymodel, store_location)
         move_motor("zheavy", new_center)
         sampleposition["zheavy"] = new_center
-        pitchmodel.parameters["beam_sigma"].set(value = new_sigma)
+        #pitchmodel.parameters["beam_sigma"].set(value = new_sigma)
         pitch_delta = pitch_limit(new_sigma, halfsample)
         new_pitch_center, new_beam_offset, pitchmodel = center_pitch(experiment, (-pitch_delta, +pitch_delta), 31,
                                                                      sampleposition, pitchmodel, store_location)
@@ -117,7 +116,7 @@ def pitch_align(experiment, start_z, start_pitch, sigma_beam, halfsample=15, sam
         move_motor("zheavy", new_center+new_beam_offset)
         sampleposition["zheavy"] = new_center+new_beam_offset
         logging.info(f"preliminary horizontal position pitch: {new_pitch_center}°")
-        logging.info(f"preliminary sample surface, vertical position: {new_center} mm")
+        logging.info(f"preliminary sample surface, vertical position: {new_center+new_beam_offset} mm")
     return new_pitch_center, new_center 
         
     
