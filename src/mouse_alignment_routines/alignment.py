@@ -111,11 +111,13 @@ def pitch_align(experiment, start_z, start_pitch, sigma_beam, halfsample=15, sam
 def roll_align(experiment, y_center, sigma_beam, rolloffset, centerofrotation = 30,
                sampleposition={"ysam.blank": -66}, store_location=Path(".")):
     y_neg = y_center - rolloffset
+    sampleposition["ysam"] = y_neg
     move_motor("ysam", y_neg)
     neg_center, sigma = zheavy_center(experiment, (-2*sigma_beam, +2*sigma_beam), 31,
                                       sampleposition, store_location)
     y_pos = y_center + rolloffset
     move_motor("ysam", y_pos)
+    sampleposition["ysam"] = y_pos
     pos_center, sigma = zheavy_center(experiment, (-2*sigma_beam, +2*sigma_beam), 31,
                                       sampleposition, store_location)
     print("positive edge:", pos_center)
@@ -125,6 +127,7 @@ def roll_align(experiment, y_center, sigma_beam, rolloffset, centerofrotation = 
     oldroll = epics.caget("mc0:rollgi")
     move_motor("rollgi", oldroll + rollangle) # to do: check sense of roll stage
     move_motor("ysam", y_center)
+    sampleposition["ysam"] = y_center
     if np.sign(y_pos - centerofrotation) == np.sign(y_neg - centerofrotation):
         new_z = np.tan(np.deg2rad(oldroll + rollangle))*abs(y_center - centerofrotation)
     else:
