@@ -91,7 +91,6 @@ def pitch_align(experiment, start_z, start_pitch, sigma_beam, halfsample=15, sam
     new_pitch_center, new_beam_offset, pitchmodel = center_pitch(experiment, (-pitch_delta, +pitch_delta), 31,
                                                                  sampleposition, pitchmodel,
                                                                  store_location)
-    print('pitch fit', pitchmodel.model.best_values)
     sampleposition["pitchgi"] = new_pitch_center
     logging.info(f"Moving motor pitchgi to {new_pitch_center}")
     move_motor("pitchgi", new_pitch_center)
