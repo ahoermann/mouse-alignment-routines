@@ -140,10 +140,7 @@ def roll_align(experiment, y_center, sigma_beam, rolloffset, centerofrotation = 
     move_motor("rollgi", oldroll + rollangle) # to do: check sense of roll stage
     move_motor("ysam", y_center)
     sampleposition["ysam"] = y_center
-    if np.sign(y_pos - centerofrotation) == np.sign(y_neg - centerofrotation):
-        new_z = np.tan(np.deg2rad(oldroll + rollangle))*abs(y_center - centerofrotation)
-    else:
-        new_z = None
+    new_z = np.tan(np.deg2rad(oldroll + rollangle))*(y_center - centerofrotation)
     return oldroll + rollangle, new_z
 
 def main():
