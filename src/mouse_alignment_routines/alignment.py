@@ -136,6 +136,10 @@ def roll_align(experiment, y_center, sigma_beam, rolloffset, centerofrotation = 
     print("negative edge:", neg_center)
     rollangle = np.rad2deg(np.arctan((pos_center - neg_center)/(2 * rolloffset)))
     print("roll angle:", rollangle)
+    if abs(rollangle) > 1:  # something has probably gone wrong
+        logging.info(f"Large roll angle identified ({rollangle} deg), reverting to zero.")
+        rollangle = 0
+
     oldroll = epics.caget("mc0:rollgi")
     move_motor("rollgi", oldroll + rollangle) # to do: check sense of roll stage
     move_motor("ysam", y_center)
