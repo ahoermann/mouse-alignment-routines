@@ -125,12 +125,12 @@ def roll_align(experiment, y_center, sigma_beam, rolloffset, centerofrotation = 
     y_neg = y_center - rolloffset
     sampleposition["ysam"] = y_neg
     move_motor("ysam", y_neg)
-    neg_center, sigma, zheavymodel = zheavy_center(experiment, (-2*sigma_beam, +2*sigma_beam), 31,
+    neg_center, sigma, zheavymodel = zheavy_center(experiment, (-4*sigma_beam, +4*sigma_beam), 31,
                                       sampleposition, zheavymodel, store_location)
     y_pos = y_center + rolloffset
     move_motor("ysam", y_pos)
     sampleposition["ysam"] = y_pos
-    pos_center, sigma, zheavymodel = zheavy_center(experiment, (-2*sigma_beam, +2*sigma_beam), 31,
+    pos_center, sigma, zheavymodel = zheavy_center(experiment, (-4*sigma_beam, +4*sigma_beam), 31,
                                       sampleposition, zheavymodel, store_location)
     print("positive edge:", pos_center)
     print("negative edge:", neg_center)
