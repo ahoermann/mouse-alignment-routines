@@ -110,13 +110,14 @@ def pitch_align(experiment, start_z, start_pitch, sigma_beam, halfsample=15, sam
         pitch_delta = pitch_limit(new_sigma, halfsample)
         new_pitch_center, new_beam_offset, pitchmodel = center_pitch(experiment, (-pitch_delta, +pitch_delta), 31,
                                                                      sampleposition, pitchmodel, store_location)
+        new_center = new_center+new_beam_offset
 
         move_motor("pitchgi", new_pitch_center)
         sampleposition["pitchgi"] = new_pitch_center
-        move_motor("zheavy", new_center+new_beam_offset)
-        sampleposition["zheavy"] = new_center+new_beam_offset
+        move_motor("zheavy", new_center)
+        sampleposition["zheavy"] = new_center
         logging.info(f"preliminary horizontal position pitch: {new_pitch_center}°")
-        logging.info(f"preliminary sample surface, vertical position: {new_center+new_beam_offset} mm")
+        logging.info(f"preliminary sample surface, vertical position: {new_center} mm")
     return new_pitch_center, new_center 
         
     
