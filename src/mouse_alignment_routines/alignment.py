@@ -39,7 +39,7 @@ def zheavy_center(experiment, limits, npoints, sampleposition, zheavymodel, stor
                        )
     motorname = data.columns[0].split(":")[-1]
     xvals = data[data.columns[0]].values
-    res = zheavymodel.model.fit(data[data.columns[1]].values, tm.z_params, 
+    res = zheavymodel.model.fit(data[data.columns[1]].values, zheavymodel.parameters,
                                 x = xvals,
                                 )
     center = res.best_values["center"]
