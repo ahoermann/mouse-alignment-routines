@@ -132,8 +132,8 @@ def roll_align(experiment, y_center, sigma_beam, rolloffset, centerofrotation = 
     sampleposition["ysam"] = y_pos
     pos_center, sigma, zheavymodel = zheavy_center(experiment, (-4*sigma_beam, +4*sigma_beam), 31,
                                       sampleposition, zheavymodel, store_location)
-    print("positive edge:", pos_center)
-    print("negative edge:", neg_center)
+    logging.info("positive edge:", pos_center)
+    logging.info("negative edge:", neg_center)
     rollangle = np.rad2deg(np.arctan((pos_center - neg_center)/(2 * rolloffset)))
     print("roll angle:", rollangle)
     if abs(rollangle) > 1:  # something has probably gone wrong
