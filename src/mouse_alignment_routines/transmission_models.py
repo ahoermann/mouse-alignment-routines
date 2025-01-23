@@ -44,7 +44,7 @@ class ZheavyModel:
     center = field(default = 4.5)
 
     def __attrs_post_init__(self):
-        self.parameters = self.model.make_params(center=dict(value = self.center, min = 0, max = 8),
+        self.parameters = self.model.make_params(center=dict(value = self.center, min = 3, max = 5),
                                                  amplitude=dict(value = -1, min = -1, max = 0),
                                                  intercept=dict(value = 1, min = 0, max = 1, expr = "-amplitude"),
                                                  sigma=dict(value = self.sigma, min = 0.05, max = 1),
