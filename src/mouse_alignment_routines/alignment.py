@@ -24,7 +24,6 @@ def center_pitch(experiment, limits, npoints, sampleposition, pitchmodel, store_
 
     res = pitchmodel.model.fit(data[data.columns[1]].values, pitchmodel.parameters, 
                          x = data[data.columns[0]].values,
-                               method="basinhopping",
                          )
     center = res.best_values["x0"]
     beam_offset = res.best_values["beam_center"]
