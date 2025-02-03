@@ -62,6 +62,7 @@ def pitch_limit(sigma_beam, halfsample):
 
 def pitch_align(experiment, zheavymodel, pitchmodel, halfsample=15, sampleposition={"ysam.blank": -66}, store_location=Path('.')):
     center, sigma_beam = zheavymodel.parameters["center"].value, zheavymodel.parameters["sigma"].value
+    pitch_center = pitchmodel.parameters["x0"].value
 
     res, zheavymodel = zheavy_center(experiment, (-2*sigma_beam, +2*sigma_beam), 31,
                                      sampleposition, zheavymodel, store_location)
