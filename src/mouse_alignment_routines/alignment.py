@@ -35,7 +35,7 @@ def zheavy_center(experiment, limits, npoints, sampleposition, zheavymodel, stor
     motorname = data.columns[0].split(":")[-1]
     xvals = data[data.columns[0]].values
     res = zheavymodel.model.fit(data[data.columns[1]].values, zheavymodel.parameters,
-                                x = xvals,
+                                x = xvals, method = "basinhopping",
                                 )
     return res.best_values, zheavymodel
 
@@ -125,13 +125,13 @@ def roll_align(experiment, y_center, sigma_beam, rolloffset, centerofrotation = 
     y_neg = y_center - rolloffset
     sampleposition["ysam"] = y_neg
     move_motor("ysam", y_neg)
-    res, zheavymodel = zheavy_center(experiment, (-4*sigma_beam, +4*sigma_beam), 31,
+    res, zheavymodel = zheavy_center(experiment, (-4*sigma_beam, +4*sigma_beam), 51,
                                       sampleposition, zheavymodel, store_location)
     neg_center = res["center"]
     y_pos = y_center + rolloffset
     move_motor("ysam", y_pos)
     sampleposition["ysam"] = y_pos
-    res, zheavymodel = zheavy_center(experiment, (-4*sigma_beam, +4*sigma_beam), 31,
+    res, zheavymodel = zheavy_center(experiment, (-4*sigma_beam, +4*sigma_beam), 51,
                                      sampleposition, zheavymodel, store_location)
     pos_center = res["center"]
     logging.info("positive edge:", pos_center)
